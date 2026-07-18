@@ -62,11 +62,14 @@ sudo cp -a ~/build/archlinux-meta/bin/flameshot /usr/local/bin
 sudo cp -a ~/build/archlinux-meta/bin/codium /usr/local/bin
 sudo cp -a ~/build/archlinux-meta/bin/codium-import.sh /usr/local/bin
 
-echo -e 'build' > ~/.hidden
-
 # Definindo papel de parede
 DIR_IMAGENS="$(xdg-user-dir PICTURES)"
 git clone https://github.com/elppans/wallpapers-opensuse.git "$DIR_IMAGENS/Wallpapers"
 gsettings set org.gnome.desktop.background picture-options 'spanned'
 gsettings set org.gnome.desktop.background picture-uri "file://$DIR_IMAGENS/Wallpapers/opensuse-tumbleweed-gnome_1920x1080_001.jpg"
 gsettings set org.gnome.desktop.background picture-uri-dark "file://$DIR_IMAGENS/Wallpapers/opensuse-tumbleweed-gnome_1920x1080_001.jpg"
+
+# Finalizando
+echo -e 'build' > ~/.hidden
+sleep 5
+sudo reboot
