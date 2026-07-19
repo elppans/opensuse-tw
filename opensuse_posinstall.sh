@@ -39,7 +39,7 @@ elif command -v apt; then
 	apt update
 fi
 
-sudo npm install -g prettier stylelint # Pacotes Shell (Global)
+sudo npm install --global prettier stylelint # Pacotes Shell (Global)
 
 mkdir -p ~/build
 
@@ -63,8 +63,8 @@ gnome-extensions install appindicatorsupport@rgcjonas.gmail.com.zip
 mkdir -p ~/build/gnome-shell-extension-caffeine && cd ~/build/gnome-shell-extension-caffeine || exit 1
 curl -JOLk "https://github.com/elppans/gnome-shell-extension-caffeine/releases/download/v60/caffeine@patapon.info.zip"
 gnome-extensions install caffeine@patapon.info.zip
-gsettings --schemadir ~/.local/share/gnome-shell/extensions/caffeine@patapon.info/schemas/ get org.gnome.shell.extensions.caffeine cli-toggle      # status
-gsettings --schemadir ~/.local/share/gnome-shell/extensions/caffeine@patapon.info/schemas/ set org.gnome.shell.extensions.caffeine cli-toggle true # Enable/Disable
+# gsettings --schemadir ~/.local/share/gnome-shell/extensions/caffeine@patapon.info/schemas/ get org.gnome.shell.extensions.caffeine cli-toggle      # status
+# gsettings --schemadir ~/.local/share/gnome-shell/extensions/caffeine@patapon.info/schemas/ set org.gnome.shell.extensions.caffeine cli-toggle true # Enable/Disable
 
 # Ativar as 3 extensões instaladas
 gsettings set org.gnome.shell enabled-extensions "['user-theme@gnome-shell-extensions.gcampax.github.com', 'caffeine@patapon.info', 'appindicatorsupport@rgcjonas.gmail.com']"
