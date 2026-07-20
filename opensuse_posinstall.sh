@@ -72,9 +72,17 @@ gsettings set org.gnome.shell enabled-extensions "['user-theme@gnome-shell-exten
 cd ~/build || exit 1
 git clone https://github.com/elppans/archlinux-meta.git
 
+# Copiando alguns Custom Scripts do ArchLinux
+sudo cp -a ~/build/archlinux-meta/bin/wine /usr/local/bin
+sudo cp -a ~/build/archlinux-meta/bin/winetricks /usr/local/bin
+sudo cp -a ~/build/archlinux-meta/bin/flameshot /usr/local/bin
+sudo cp -a ~/build/archlinux-meta/bin/codium /usr/local/bin
+sudo cp -a ~/build/archlinux-meta/bin/codium-import.sh /usr/local/bin
+
 cd ~/build/archlinux-meta/config/Gnome-Shell || exit 1
-./gnome-shell-set.sh
-./gnome-shell-keyboard.sh
+./gnome-shell-set.sh # Configurações do Gnome Shell+
+./gnome-shell-build-xdg-directories.sh # Configuração e sincronização dos arquivos de diretórios XDG 
+./gnome-shell-keyboard.sh # Configurações de atalhos do Gnome Shell+
 
 cd ~/build/archlinux-meta/custom/ || exit 1
 ./file_templates.sh
@@ -84,12 +92,6 @@ cd ~/build/archlinux-meta/pacotes/ || exit 1
 sed -i 's/flathub org.mozilla.firefox/# flathub org.mozilla.firefox/g' flatpak.list
 ./flatpak.sh
 ./flatpak.ini
-
-sudo cp -a ~/build/archlinux-meta/bin/wine /usr/local/bin
-sudo cp -a ~/build/archlinux-meta/bin/winetricks /usr/local/bin
-sudo cp -a ~/build/archlinux-meta/bin/flameshot /usr/local/bin
-sudo cp -a ~/build/archlinux-meta/bin/codium /usr/local/bin
-sudo cp -a ~/build/archlinux-meta/bin/codium-import.sh /usr/local/bin
 
 # Definindo papel de parede
 DIR_IMAGENS="$(xdg-user-dir PICTURES)"
