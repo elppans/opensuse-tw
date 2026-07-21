@@ -43,12 +43,10 @@ elif command -v apt; then
 	PACOTES=(
 		# Tema
 		yaru-theme-sound
-		# kora-icon-theme
-		gnome-themes-extra
 		dbus-x11 # dbus-launch
 
 		# Suporte extensão
-		gnome-shell-extension-appindicator
+		# gnome-shell-extension-appindicator
 		gtk2-engines-murrine
 
 		# Pacotes Devel
@@ -56,13 +54,13 @@ elif command -v apt; then
 		make
 
 		# Pacotes Shell*
-		jq*
-		ruby*
-		shellcheck*
-		shfmt*
-		nodejs*
-		npm*
-		stylelint*
+		jq
+		ruby
+		shellcheck
+		shfmt
+		nodejs
+		npm
+		stylelint
 	)
 
 	echo "==> Atualizando repositórios e sistema..."
@@ -70,14 +68,17 @@ elif command -v apt; then
 	sudo apt -y upgrade
 
 	echo "==> Instalando pacotes selecionados..."
-	# Invocação única do zypper expandindo o array de pacotes
 	sudo apt install "${PACOTES[@]}"
 	
 	# Pacotes Shell (Global)
-	sudo npm install --global prettier stylelint
+	sudo npm install --global prettier
+
+	# Icon Theme Source
+	cd /tmp
+	git clone https://github.com/bikass/kora.git
+	sudo cp -a /tmp/kora/{kora,kora-pgrey} /usr/share/icons/
+	# cp -a /tmp/kora/{kora,kora-pgrey} "$HOME/.local/share/icons/"
 fi
-
-
 
 mkdir -p ~/build
 
