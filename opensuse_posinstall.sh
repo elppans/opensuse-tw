@@ -73,73 +73,39 @@ elif command -v apt; then
 	
 	# Pacotes Shell (Global)
 	sudo npm install --global prettier
-
-	# Icon Theme Source
-	cd /tmp
-	git clone https://github.com/bikass/kora.git
-	sudo cp -a /tmp/kora/{kora,kora-pgrey} /usr/share/icons/
-	# cp -a /tmp/kora/{kora,kora-pgrey} "$HOME/.local/share/icons/"
 fi
 
-mkdir -p ~/build
-
-cd ~/build || exit 1
-git clone https://github.com/elppans/Orchis-theme.git
-cd ~/build/Orchis-theme || exit 1
-./install.sh -c dark -l -f -i opensuse --tweaks compact dock # primary = barra flutuante
-sudo flatpak override --filesystem=xdg-config/gtk-3.0 && sudo flatpak override --filesystem=xdg-config/gtk-4.0
-
-mkdir -p ~/build/bibata-cursor-theme && cd ~/build/bibata-cursor-theme || exit 1
-curl -JOLk https://github.com/elppans/Bibata_Cursor/releases/download/v2.0.7/Bibata.tar.xz
-sudo mkdir -p /etc/skel/.local/share/icons/
-sudo tar -xJf Bibata.tar.xz -C /etc/skel/.local/share/icons/
-rsync -ah /etc/skel/. "$HOME/"
-
-mkdir -p ~/build/gnome-shell-extension-appindicator && cd ~/build/gnome-shell-extension-appindicator || exit 1
-curl -JOLk "https://github.com/ubuntu/gnome-shell-extension-appindicator/releases/download/v64/appindicatorsupport@rgcjonas.gmail.com.zip"
-gnome-extensions install appindicatorsupport@rgcjonas.gmail.com.zip
-
-# https://github.com/eonpatapon/gnome-shell-extension-caffeine
-mkdir -p ~/build/gnome-shell-extension-caffeine && cd ~/build/gnome-shell-extension-caffeine || exit 1
-curl -JOLk "https://github.com/elppans/gnome-shell-extension-caffeine/releases/download/v60/caffeine@patapon.info.zip"
-gnome-extensions install caffeine@patapon.info.zip
-
-# https://github.com/micheleg/dash-to-dock
-mkdir -p ~/build/dash-to-dock && cd ~/build/dash-to-dock || exit 1
-curl -JOLk "https://github.com/micheleg/dash-to-dock/releases/download/extensions.gnome.org-v105/dash-to-dock@micxgx.gmail.com.zip"
-gnome-extensions install dash-to-dock@micxgx.gmail.com.zip
-
-# https://github.com/dustin-hawkins/quick-sound-switcher
-mkdir -p ~/build/quick-sound-switcher && cd ~/build/quick-sound-switcher || exit 1
-curl -JOLk "https://github.com/dustin-hawkins/quick-sound-switcher/releases/download/v1.0.1/quick-sound-switcher@dustin-hawkins-v1.0.1.shell-extension.zip"
-gnome-extensions install quick-sound-switcher@dustin-hawkins-v1.0.1.shell-extension.zip
-
-# Ativar as 3 extensões instaladas
-gsettings set org.gnome.shell enabled-extensions "['user-theme@gnome-shell-extensions.gcampax.github.com', 'caffeine@patapon.info', 'appindicatorsupport@rgcjonas.gmail.com', 'dash-to-dock@micxgx.gmail.com', 'quick-sound-switcher@dustin-hawkins']"
-
-cd ~/build || exit 1
+mkdir -p ~/build && cd ~/build || exit 1
 git clone https://github.com/elppans/archlinux-meta.git
+cd archlinux-meta || exit 1
+locdir="$(pwd)"
+install="$locdir"
+export install
+base_install="$(basename "$install")"
+export base_install
 
 # Copiando alguns Custom Scripts do ArchLinux
-sudo cp -a ~/build/archlinux-meta/bin/wine /usr/local/bin
-sudo cp -a ~/build/archlinux-meta/bin/winetricks /usr/local/bin
-sudo cp -a ~/build/archlinux-meta/bin/flameshot /usr/local/bin
-sudo cp -a ~/build/archlinux-meta/bin/codium /usr/local/bin
-sudo cp -a ~/build/archlinux-meta/bin/codium-import.sh /usr/local/bin
+# sudo cp -a "$install"/bin/wine /usr/local/bin
+# sudo cp -a "$install"/bin/winetricks /usr/local/bin
+# sudo cp -a "$install"/bin/flameshot /usr/local/bin
+# sudo cp -a "$install"/bin/codium /usr/local/bin
+# sudo cp -a "$install"/bin/codium-import.sh /usr/local/bin
 
-cd ~/build/archlinux-meta/config/Gnome-Shell || exit 1
+cd "$install"/pacotes/ || exit 1
+sed -i 's/flathub org.mozilla.firefox/# flathub org.mozilla.firefox/g' flatpak.list
+./flatpak.sh
+./flatpak.ini
+
+cd "$install"/config/Gnome-Shell || exit 1
+./gnome-shell-themes-orchis.sh # Instalação e configuração de temas
+./gnome-shell-extensions.sh # Instalação e configuração de extensões
 ./gnome-shell-set.sh # Configurações do Gnome Shell+
 ./gnome-shell-build-xdg-directories.sh # Configuração e sincronização dos arquivos de diretórios XDG 
 ./gnome-shell-keyboard.sh # Configurações de atalhos do Gnome Shell+
 
-cd ~/build/archlinux-meta/custom/ || exit 1
+cd "$install"/custom/ || exit 1
 ./file_templates.sh
 ./gnome-shell-headerbar.sh
-
-cd ~/build/archlinux-meta/pacotes/ || exit 1
-sed -i 's/flathub org.mozilla.firefox/# flathub org.mozilla.firefox/g' flatpak.list
-./flatpak.sh
-./flatpak.ini
 
 # Definindo papel de parede
 DIR_IMAGENS="$(xdg-user-dir PICTURES)"
