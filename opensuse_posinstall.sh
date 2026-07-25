@@ -105,10 +105,12 @@ cd "$install"/config/Gnome-Shell || exit 1
 ./gnome-shell-set.sh # Configurações do Gnome Shell+
 ./gnome-shell-build-xdg-directories.sh # Configuração e sincronização dos arquivos de diretórios XDG 
 ./gnome-shell-keyboard.sh # Configurações de atalhos do Gnome Shell+
+./gnome-shell-headerbar.sh # Define o estilo CSS para reduzir o tamanho da barra
 
 cd "$install"/custom/ || exit 1
-./file_templates.sh
-./gnome-shell-headerbar.sh
+./ssh_config.sh
+./templates.sh
+
 
 # Definindo papel de parede
 DIR_IMAGENS="$(xdg-user-dir PICTURES)"
