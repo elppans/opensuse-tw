@@ -75,9 +75,12 @@ elif command -v apt; then
 	sudo npm install --global prettier
 fi
 
+echo "Preparando pacote meta para uso no sistema"
+sleep 5
 mkdir -p ~/build && cd ~/build || exit 1
 git clone https://github.com/elppans/archlinux-meta.git
 cd archlinux-meta || exit 1
+
 locdir="$(pwd)"
 install="$locdir"
 export install
@@ -116,5 +119,23 @@ gsettings set org.gnome.desktop.background picture-uri-dark "file://$DIR_IMAGENS
 
 # Finalizando
 echo -e 'build' >~/.hidden
+
+echo "Finalizando a instalação verificando atualização de pacotes"
+sleep 5
+sudo flatpak --noninteractive -y update
+sudo zypper --non-interactive update
+
+echo "Fazendo limpeza no sistema após instalação de pacotes"
+sleep 5
+sudo zypper clean -a # Limpa todos os caches de repositórios e pacotes baixados (.rpm).
+sudo zypper clean # Limpa apenas os metadados e arquivos temporários expirados/antigos.
+sudo zypper packages --unneeded | awk -F'|' 'NR>4 {print $3}' | xargs sudo zypper rm -u &>>/dev/null # Remover todos os órfãos em massa
+sudo flatpak uninstall --unused &>>/dev/null # Limpeza de Runtimes/Apps sem uso no escopo do SISTEMA (sudo)
+flatpak uninstall --unused --user # Limpeza de Runtimes/Apps sem uso no escopo de USUÁRIO
+rm -rf ~/.cache/flatpak/ # O Flatpak não possui um subcomando nativo clean; os arquivos baixados temporários ficam na cache de usuário.
+sudo rm -rf /var/tmp/flatpak-cache-* # Limpeza de Arquivos Temporários de Download no /var
+sudo flatpak repair # Se houver objetos órfãos ou inconsistências no repositório local OSTree do Flatpak.
+
 sleep 5
 sudo reboot
+
